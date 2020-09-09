@@ -2,10 +2,11 @@ package hospital.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Set;
 
-public class Examination {
+import hospital.data.Saveable;
+import hospital.util.StringUtil;
+
+public class Examination implements Saveable {
 	
 	private static int durationInMinutes = 20;
 	private LocalDateTime startDateTime;
@@ -49,6 +50,19 @@ public class Examination {
 	
 	public Report getReport() {
 		return report;
+	}
+
+	@Override
+	public String toCSV() {
+		return StringUtil.qoute(startDateTime) + "," + StringUtil.qoute(patient.getUsername()) 
+			+ "," + StringUtil.qoute(doctor.getUsername()) 
+			+ "," + StringUtil.qoute(isExamined() ? report.getId() : "");
+	}
+
+	@Override
+	public void parseCSV(String csv) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

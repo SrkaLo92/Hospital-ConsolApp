@@ -66,15 +66,47 @@ public class Hospital {
 		diagnoses.add(diagnosis);
 	}
 	
-	public String drugList() {
-		if(drugs.size() == 0) {
-			return "";
-		}
-		String drugList = "";
+	public List<String> drugList() {
+		List<String> drugList = new ArrayList<String>();
 		for(Drug drug : drugs) {
-			drugList += drug.getName() + "\n";
+			drugList.add(drug.getName());
 		}
-		return drugList.substring(0, drugList.length() - 1);
+		return drugList;
+	}
+
+	public List<String> diagnosisList() {
+		List<String> diagnosisList = new ArrayList<String>();
+		for(Diagnosis diagnosis : diagnoses) {
+			diagnosisList.add("Name: " + diagnosis.getName() + " Code: " + diagnosis.getCode() );
+		}
+		return diagnosisList;
+	}
+	
+	public List<String> doctorList() {
+		List<String> doctorList = new ArrayList<String>();
+		for(Doctor doctor : doctors) {
+			doctorList.add(doctor.getFirstName() + " " + doctor.getLastName() + ", " + doctor.getSpecialization());
+		}
+		return doctorList;
+	}
+	
+	public List<String> patientList(String firstName, String lastName) {	
+		List<String> patientList = new ArrayList<String>();
+		for(Patient patient : getPatients(firstName, lastName)) {
+			patientList.add(patient.getFirstName() + " " + patient.getLastName() + ", " + patient.getUsername());
+		}
+		
+		return patientList;
+	}
+	
+	public List<String> nextDoctorExaminationList(String doctorUsername) {
+		List<String> nextDoctorExaminationList = new ArrayList<String>();
+		for(Examination examination : examinations) {
+			if(examination.getDoctor().getUsername().equals(doctorUsername) && !examination.examinationIsPassed() && !examination.isExamined()) {
+			 	nextDoctorExaminationList.add(examination.toString());
+			}
+		}
+		return nextDoctorExaminationList;
 	}
 	
 	public Drug findDrug(String name) {
@@ -90,36 +122,12 @@ public class Hospital {
 		return drugs.removeIf((drug) -> drug.getName().equals(name));
 	}
 	
-	public String diagnosisList() {
-		if(diagnoses.size() == 0) {
-			return "";
-		}
-		String diagnosisList = "";
-		for(Diagnosis diagnosis : diagnoses) {
-			diagnosisList += "Name: " + diagnosis.getName() + " Code: " + diagnosis.getCode() + "\n";
-		}
-		return diagnosisList.substring(0, diagnosisList.length() - 1);
-	}
-	
 	public boolean deleteDiagnosis(String code) {
 		return diagnoses.removeIf((diagnosis) -> diagnosis.getCode().equals(code));
 	}
 	
 	public void addExamination(Examination examination) {
 		examinations.add(examination);
-	}
-	
-	public String doctorList() {
-		if(doctors.size() == 0) {
-			return "";
-		}
-		String doctorList = "";
-		int orderNumber = 1;
-		for(Doctor doctor : doctors) {
-			doctorList +=orderNumber + ". " + doctor.getFirstName() + " " + doctor.getLastName() + ", " + doctor.getSpecialization() + "\n";
-			orderNumber++;
-		}
-		return doctorList.substring(0, doctorList.length() - 1);
 	}
 	
 	public Doctor getDoctor(int index) {
@@ -138,18 +146,6 @@ public class Hospital {
 
 	public String getName() {
 		return name;
-	}
-	
-	public String nextDoctorExaminationList(String doctorUsername) {
-		String nextDoctorExaminationList = "";
-		int orderNumber = 1;
-		for(Examination examination : examinations) {
-			if(examination.getDoctor().getUsername().equals(doctorUsername) && !examination.examinationIsPassed() && !examination.isExamined()) {
-			 	nextDoctorExaminationList += orderNumber + ". " + examination + "\n";
-			 	orderNumber++;
-			}
-		}
-		return nextDoctorExaminationList;
 	}
 	
 	public Examination getExaminationForDoctor(int selectedOrderNumber, String doctorUsername) {
@@ -176,17 +172,12 @@ public class Hospital {
 		return null;
 	}
 	
-	public String diagnosisDrugList(List<Diagnosis> selectedDiagnoses) {
-		
+	public List<String> diagnosisDrugList(List<Diagnosis> selectedDiagnoses) {
 		Set<String> drugNames = new HashSet<String>();
 		for(Diagnosis diagnosis : diagnoses) {
 			drugNames.addAll(diagnosis.getDrugNames());
 		}
-		String drugList = "";
-		for(String drugName: drugNames) {
-			drugList += drugName + "\n";
-		}
-		return drugList;
+		return new ArrayList<String>(drugNames);
 	}
 	
 	public Patient findPatientByHealthCardId(int healthCardId) {
@@ -196,19 +187,6 @@ public class Hospital {
 			}
 		}
 		return null;
-	}
-	
-	public String patientList(String firstName, String lastName) {
-		
-		String patientList = "";
-		
-		int orderNumber = 1;
-		for(Patient patient : getPatients(firstName, lastName)) {
-			patientList += orderNumber + ". " + patient.getFirstName() + " " + patient.getLastName() + ", " + patient.getUsername() + "\n";
-		}
-		
-		return patientList;
-		
 	}
 	
 	private List<Patient> getPatients(String firstName, String lastName) {

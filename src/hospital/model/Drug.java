@@ -1,7 +1,9 @@
 package hospital.model;
 
-public class Drug {
-	
+import hospital.data.Saveable;
+import hospital.util.StringUtil;
+
+public class Drug implements Saveable{
 	private String name;
 	private boolean imported;
 	
@@ -16,6 +18,16 @@ public class Drug {
 	
 	public boolean isImported() {
 		return imported;
+	}
+
+	@Override
+	public String toCSV() {
+		return StringUtil.qoute(name) + "," + StringUtil.qoute(imported);
+	}
+
+	@Override
+	public void parseCSV(String csv) {
+		
 	}
 
 }

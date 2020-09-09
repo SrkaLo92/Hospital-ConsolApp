@@ -2,15 +2,21 @@ package hospital.model;
 
 import java.util.List;
 
-public class Recipe implements Document {
+import hospital.data.Saveable;
+import hospital.util.StringUtil;
+
+public class Recipe implements Document, Saveable{
 	
 	private boolean signed;
 	private Doctor doctor;
 	private List<Drug> drugs;
+	private int id;
 	
 	public Recipe(List<Drug> drugs) {
 		signed = false;
+		id = 0;
 		this.drugs = drugs;
+		
 	}
 
 	@Override
@@ -37,6 +43,27 @@ public class Recipe implements Document {
 		
 		signed = true;
 		this.doctor = doctor;
+		
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String toCSV() {
+		String csv = StringUtil.qoute(doctor.getUsername()) + "," + StringUtil.qoute(signed);
+		String drugsCSV = "";
+		for(Drug drug: drugs) {
+			drugsCSV += drug.getName() + " ";
+		}
+		
+		return csv + "," + StringUtil.qoute(drugsCSV.trim());
+	}
+
+	@Override
+	public void parseCSV(String csv) {
+		// TODO Auto-generated method stub
 		
 	}
 

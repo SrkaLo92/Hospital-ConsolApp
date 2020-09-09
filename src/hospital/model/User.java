@@ -14,6 +14,9 @@ public abstract class User {
 		this.password = password;
 	}
 	
+	public abstract String[] getMenu();
+	public abstract int offset();
+	
 	public String getFirstName() {
 		return firstName;
 	}

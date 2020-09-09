@@ -1,4 +1,4 @@
-package oop1_projekat2_2018_271098;
+package hospital;
 
 import hospital.console.Console;
 import hospital.model.Administrator;

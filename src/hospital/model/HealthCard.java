@@ -7,7 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class HealthCard {
+import hospital.data.Saveable;
+import hospital.util.Constants;
+import hospital.util.StringUtil;
+
+public class HealthCard implements Saveable {
 	
 	private int id;
 	private LocalDate expirationDate;
@@ -16,8 +20,8 @@ public class HealthCard {
 	
 	public HealthCard(InsuranceType insuranceType) {
 		this.insuranceType = insuranceType;
-		this.expirationDate = LocalDate.now().plusYears(1); //Jedinicu promeniti
-		this.id = 0; //Generisati jedinstven broj
+		this.expirationDate = LocalDate.now().plusYears(Constants.EXPIRATION_DATE_OFFSET); 
+		this.id = 0;
 		this.examinations = new ArrayList<Examination>();
 	}
 	
@@ -26,7 +30,7 @@ public class HealthCard {
 	}
 	
 	public void extendExpirationDate(int amount, ChronoUnit unit) {
-		expirationDate.plus(amount, unit);
+		expirationDate = expirationDate.plus(amount, unit);
 	}
 	
 	public int getId() {
@@ -53,6 +57,18 @@ public class HealthCard {
 		}
 		
 		return string;
+	}
+
+	@Override
+	public String toCSV() {
+		return StringUtil.qoute(id) + "," + StringUtil.qoute(expirationDate) + "," 
+				+ StringUtil.qoute(insuranceType);
+	}
+
+	@Override
+	public void parseCSV(String csv) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

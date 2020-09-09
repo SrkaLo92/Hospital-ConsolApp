@@ -4,7 +4,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Diagnosis {
+import hospital.data.Saveable;
+import hospital.util.StringUtil;
+
+public class Diagnosis implements Saveable {
 	
 	private String name;
 	private String code;
@@ -40,6 +43,22 @@ public class Diagnosis {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public String toCSV() {
+		String csv = StringUtil.qoute(name) + "," + StringUtil.qoute(code) + ",";
+		String drugsCSV = "";
+		for(Drug drug: drugs) {
+			drugsCSV += drug.getName() + " ";
+		}
+		return csv + StringUtil.qoute(drugsCSV.trim());
+	}
+
+	@Override
+	public void parseCSV(String csv) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

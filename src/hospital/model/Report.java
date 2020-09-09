@@ -6,7 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Report implements Document {
+import hospital.data.Saveable;
+import hospital.util.StringUtil;
+
+public class Report implements Document, Saveable {
 	
 	private LocalDate publishDate;
 	private boolean signed;
@@ -15,6 +18,7 @@ public class Report implements Document {
 	private Doctor doctor;
 	private List<Diagnosis> diagnoses;
 	private List<Recipe> recipes;
+	private int id;
 	
 	public Report(Hospital hospital, Patient patient, Doctor doctor, List<Diagnosis> diagnoses, List<Recipe> recipes) {
 		publishDate = LocalDate.now();
@@ -24,7 +28,7 @@ public class Report implements Document {
 		this.doctor = doctor;
 		this.diagnoses = diagnoses;
 		this.recipes = recipes;
-		
+		id = 0; // napisi generator
 	}
 
 	@Override
@@ -74,6 +78,33 @@ public class Report implements Document {
 		}
 		
 		return diagnosisSet;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String toCSV() {	
+		String csv = StringUtil.qoute(publishDate) + "," + StringUtil.qoute(patient.getUsername())
+			+ "," + StringUtil.qoute(doctor.getUsername()) + "," + StringUtil.qoute(signed);
+		String diagnosesCSV = "";
+		for(Diagnosis diagnosis: diagnoses) {
+			diagnosesCSV += diagnosis.getCode() + " ";
+		}
+		
+		String recipesCSV = "";
+		for(Recipe recipe: recipes) {
+			recipesCSV += recipe.getId() + " ";
+		}
+		
+		return csv + "," + StringUtil.qoute(diagnosesCSV.trim()) + "," + StringUtil.qoute(recipesCSV.trim());
+	}
+
+	@Override
+	public void parseCSV(String csv) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
